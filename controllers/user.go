@@ -7,8 +7,8 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/alexedwards/argon2id"
 	"github.com/labstack/echo/v4"
-	"golang.org/x/crypto/bcrypt"
 )
 
 func Register(c echo.Context) error {
@@ -28,7 +28,13 @@ func Register(c echo.Context) error {
 	}
 
 	// Hash password sebelum disimpan
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), 14)
+	hashedPassword, err := argon2id.CreateHash(user.Password, &argon2id.Params{
+		Memory:      128 * 1024,
+		Iterations:  4,
+		Parallelism: 4,
+		SaltLength:  16,
+		KeyLength:   32,
+	})
 	if err != nil {
 		return err
 	}
@@ -56,9 +62,13 @@ func Login(c echo.Context) error {
 	}
 
 	// Periksa apakah password benar
-	err := bcrypt.CompareHashAndPassword(existingUser.Password, []byte(user.Password))
+	match, err := argon2id.ComparePasswordAndHash(user.Password, existingUser.Password)
 	if err != nil {
-		return c.JSON(http.StatusUnauthorized, map[string]string{"message": "Invalid email or password"})
+		return c.JSON(http.StatusUnauthorized, map[string]string{"message": "Invalid email"})
+	}
+
+	if !match {
+		return c.JSON(http.StatusUnauthorized, map[string]string{"message": "Invalid password"})
 	}
 
 	// Buat token
