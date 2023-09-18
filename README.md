@@ -6,5 +6,5 @@ Belajar membuat RESTfull API dengan menggunakan **Echo** sebagai framework, **GO
 > - Install Reflex
 > `` go install github.com/cespare/reflex@latest ``
 > - Lalu jalankan perintah
-> ``reflex -r '\.go$' -s -- sh -c 'go run server.go'   ``
+> ``reflex -r '\.go$' -s -- sh -c 'go run main.go'   ``
 
