@@ -23,5 +23,5 @@ func main() {
 
 	router.SetupRoute(app)
 
-	app.Logger.Fatal(app.Start(":6000"))
+	app.Logger.Fatal(app.Start(":8080"))
 }

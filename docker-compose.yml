@@ -1,0 +1,29 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    environment:
+      - DB_HOST=db
+      - DB_PORT=5432
+      - DB_USER=postgres
+      - DB_PASSWORD=postgres
+      - DB_NAME=echo_auth_crud
+      - DB_SSL_MODE=disable
+      - DB_TIMEZONE=Asia/Jakarta
+      - ACCESS_TOKEN_SECRET=anjay_access
+      - REFRESH_TOKEN_SECRET=anjay_refresh
+
+  db:
+    image: postgres:latest
+    ports:
+      - "5444:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: echo_auth_crud
