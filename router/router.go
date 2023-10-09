@@ -11,10 +11,10 @@ func SetupRoute(app *echo.Echo) {
 	app.POST("/register", controllers.Register)
 	app.POST("/login", controllers.Login)
 	app.POST("/refresh", controllers.RefreshToken)
-	app.POST("/logout", controllers.Logout)
 
 	apps := app.Group("/auth")
 	apps.Use(middleware.Middleware)
+	apps.POST("/logout", controllers.Logout)
 	apps.GET("/user", controllers.GetUser)
 
 	apps.POST("/book", controllers.AddBook)
