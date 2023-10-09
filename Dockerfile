@@ -1,14 +1,4 @@
-FROM golang:alpine
-
-RUN apk update && apk add --no-cache git
-
-WORKDIR /app
-
-COPY . .
-
-RUN go mod tidy
-
-RUN go build -o binary
+FROM golang:latest
 
 ENV DB_HOST=${DB_HOST}
 ENV DB_USER=${DB_USER}
@@ -20,6 +10,14 @@ ENV DB_TIMEZONE=${DB_TIMEZONE}
 ENV ACCESS_TOKEN_SECRET=${ACCESS_TOKEN_SECRET}
 ENV REFRESH_TOKEN_SECRET=${REFRESH_TOKEN_SECRET}
 
-EXPOSE 6000
+RUN ln -sf /usr/share/zoneinfo/Asia/Jakarta /etc/localtime
 
-CMD "/app/binary"
+WORKDIR /app
+
+COPY . .
+
+RUN go mod download
+
+RUN go build -o main .
+
+CMD ["./main"]
